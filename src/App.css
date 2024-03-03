@@ -1,3 +1,71 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#root { 
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.container {
+  text-align: center;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #00529B; /* UF Blue */
+  color: #FFC20E; /* UF Orange for text */
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+h1 {
+  color: #FFC20E;
+}
+
+.instructions {
+  background-color: #F57C00; /* A darker shade of orange for contrast */
+  color: #ffffff;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+select, button {
+  padding: 10px 15px;
+  margin-top: 20px;
+  border: 1px solid #FFC20E;
+  background-color: #007FFF; /* A lighter shade of blue for elements */
+  color: #ffffff;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button {
+  background-color: #FFC20E; /* Orange button */
+  color: #00529B; /* Blue text */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover {
+  background-color: #F57C00; /* A darker shade of orange */
+  color: #ffffff;
+}
+
+a {
+  color: #00529B;
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +103,29 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.footer {
+  margin-top: auto; /* Pushes the footer to the bottom */
+  background-color: #00529B; /* UF Blue */
+  color: #FFC20E; /* UF Orange for text */
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.footer-logo {
+  margin-right: 20px;
+  width: 60px; /* Adjust based on your logo's size */
+}
+
+p {
+  margin: 0;
+  color: #ffffff; /* Ensure text color for visibility */
 }
