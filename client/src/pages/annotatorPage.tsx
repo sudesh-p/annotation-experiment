@@ -1,29 +1,37 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import { Footer } from "../components";
+import Footer from "../components/footer";
+import { Questions } from "../types/data";
 
 export default function AnnotatorPage() {
-  let { name } = useParams();
+  const { name } = useParams();
 
   // Use userId to differentiate between users in localStorage
-  const getUserStorageKey = useCallback((key) => `user_${name}_${key}`, [name]);
-  const [currentQuestion, setCurrentQuestion] = useState(
-    localStorage.getItem(getUserStorageKey("currentQuestion")) || 0
+  const getUserStorageKey = useCallback(
+    (key: string) => `user_${name}_${key}`,
+    [name]
   );
-  const [isFinished, setIsFinished] = useState(
+  const [currentQuestion, setCurrentQuestion] = useState<string>(
+    localStorage.getItem(getUserStorageKey("currentQuestion")) || "0"
+  );
+  const [isFinished, setIsFinished] = useState<boolean>(
     localStorage.getItem(getUserStorageKey("isFinished")) === "true"
       ? true
       : false
   );
-  const [questions, setQuestions] = useState(
-    JSON.parse(localStorage.getItem(getUserStorageKey("questions"))) || []
+
+  const [questions, setQuestions] = useState<Questions>(
+    JSON.parse(localStorage.getItem(getUserStorageKey("questions")) || '""') ||
+      []
   );
 
   const fetchQuestions = useCallback(
-    async (quizName) => {
+    async (quizName?: string) => {
       try {
         const responseData = await fetch(`/data/${quizName}.json`);
-        const data = await responseData.json();
+        const data: {
+          questions: Questions;
+        } = await responseData.json();
         const storedQuestions = data.questions.map((question) => ({
           ...question,
           modified: false,
@@ -40,24 +48,56 @@ export default function AnnotatorPage() {
     [setQuestions, getUserStorageKey]
   );
 
-  useEffect(() => {
-    if (!questions.length) {
-      fetchQuestions(name);
+  const fetchCompletionStatus = useCallback(async () => {
+    try {
+      const responseData = await fetch(
+        `http://localhost:3001/is-completed?name=${name}`
+      );
+      console.log("test", responseData);
+      const data: boolean = await responseData.json();
+      setIsFinished(data);
+    } catch (error) {
+      console.error("Error fetching status:", error);
     }
-  }, [fetchQuestions, name, questions.length]);
+  }, [name]);
 
-  const handleAnswer = (answer) => {
-    const updatedQuestions = questions.map((q, i) =>
-      i === Number(currentQuestion) ? { ...q, response: answer } : q
+  const submitQuiz = useCallback(() => {
+    const allQuestionsAttempted = questions.every(
+      (question) => question.response !== undefined
     );
-    setQuestions(updatedQuestions);
-    localStorage.setItem(
-      getUserStorageKey("questions"),
-      JSON.stringify(updatedQuestions)
-    );
-  };
 
-  const handleNext = () => {
+    const allQuestionsModified = questions.every(
+      (question) => question.modified
+    );
+    if (allQuestionsAttempted && allQuestionsModified) {
+      setIsFinished(allQuestionsModified);
+      if (allQuestionsModified) {
+        sendDataToServer(name || "", questions);
+        localStorage.removeItem(getUserStorageKey("currentQuestion"));
+        localStorage.removeItem(getUserStorageKey("isFinished"));
+        localStorage.removeItem(getUserStorageKey("questions"));
+        fetchQuestions();
+      }
+    } else {
+      alert("Please attempt all the questions!");
+    }
+  }, [fetchQuestions, getUserStorageKey, name, questions]);
+
+  const handleAnswer = useCallback(
+    (answer: "Yes" | "No") => {
+      const updatedQuestions = questions.map((q, i) =>
+        i === Number(currentQuestion) ? { ...q, response: answer } : q
+      );
+      setQuestions(updatedQuestions);
+      localStorage.setItem(
+        getUserStorageKey("questions"),
+        JSON.stringify(updatedQuestions)
+      );
+    },
+    [currentQuestion, getUserStorageKey, questions]
+  );
+
+  const handleNext = useCallback(() => {
     const updatedQuestions = [...questions];
     updatedQuestions[Number(currentQuestion)] = {
       ...updatedQuestions[Number(currentQuestion)],
@@ -68,42 +108,63 @@ export default function AnnotatorPage() {
       getUserStorageKey("questions"),
       JSON.stringify(updatedQuestions)
     );
-  
+
     if (Number(currentQuestion) < questions.length - 1) {
-      setCurrentQuestion(Number(currentQuestion) + 1);
+      setCurrentQuestion(String(Number(currentQuestion) + 1));
       localStorage.setItem(
         getUserStorageKey("currentQuestion"),
-        Number(currentQuestion) + 1
+        String(Number(currentQuestion) + 1)
       );
     } else {
       // If it's the last question, submit the quiz
       submitQuiz();
     }
-  };
-  
+  }, [currentQuestion, getUserStorageKey, questions, submitQuiz]);
 
-  const submitQuiz = () => {
-    const allQuestionsAttempted = questions.every(
-      (question) => question.response !== undefined
-    );
-    if (allQuestionsAttempted) {
-      const allQuestionsModified = questions.every(
-        (question) => question.modified
+  const handlePrevious = useCallback(() => {
+    if (Number(currentQuestion) > 0) {
+      setCurrentQuestion(String(Number(currentQuestion) - 1));
+      localStorage.setItem(
+        getUserStorageKey("currentQuestion"),
+        String(Number(currentQuestion) - 1)
       );
-      setIsFinished(allQuestionsModified);
-      if (allQuestionsModified) {
-        console.log(questions);
-        sendDataToServer(name, questions);
-        localStorage.removeItem(getUserStorageKey("currentQuestion"));
-        localStorage.removeItem(getUserStorageKey("isFinished"));
-        localStorage.removeItem(getUserStorageKey("questions"));
-        fetchQuestions()
-      }
-    } else {
-      alert("Please attempt all the questions!");
     }
-  }
-  const sendDataToServer = async (name, questions) => {
+  }, [currentQuestion, getUserStorageKey]);
+
+  useEffect(() => {
+    fetchCompletionStatus();
+  }, [fetchCompletionStatus]);
+
+  useEffect(() => {
+    if (!questions.length) {
+      fetchQuestions(name || "");
+    }
+  }, [fetchQuestions, name, questions.length]);
+
+  useEffect(() => {
+    document.onkeydown = (event) => {
+      switch (event.key) {
+        case "a":
+          handlePrevious();
+          break;
+        case "w":
+          handleAnswer("Yes");
+          break;
+        case "s":
+          handleAnswer("No");
+          break;
+        case "d":
+          handleNext();
+          break;
+      }
+    };
+
+    return () => {
+      document.onkeydown = null;
+    };
+  }, [handleAnswer, handleNext, handlePrevious]);
+
+  const sendDataToServer = async (name: string, questions: Questions) => {
     try {
       const response = await fetch("http://localhost:3001/create-file", {
         method: "POST",
@@ -115,7 +176,6 @@ export default function AnnotatorPage() {
 
       if (response.ok) {
         console.log("Annotator Data saved successfully.");
-        
       } else {
         throw new Error("Network response was not ok.");
       }
@@ -127,26 +187,20 @@ export default function AnnotatorPage() {
     }
   };
 
-  const handlePrevious = () => {
-    if (Number(currentQuestion) > 0) {
-      setCurrentQuestion(Number(currentQuestion) - 1);
-      localStorage.setItem(
-        getUserStorageKey("currentQuestion"),
-        Number(currentQuestion) - 1
-      );
-    }
-  };
-
-  const handleQuestionClick = (index) => {
-    setCurrentQuestion(index);
-    localStorage.setItem(getUserStorageKey("currentQuestion"), index);
+  const handleQuestionClick = (index: number) => {
+    setCurrentQuestion(String(index));
+    localStorage.setItem(getUserStorageKey("currentQuestion"), String(index));
   };
 
   return (
     <div>
       <div className="main_container">
         <div className="main">
-          <h2>Welcome to the Annotation, {name}</h2> <br />
+          <h2>
+            Welcome to the Annotation,{" "}
+            {name ? name[0].toUpperCase() + name.substring(1) : ""}
+          </h2>{" "}
+          <br />
           {!isFinished && questions.length > 0 ? (
             <div className="question_box">
               <h3>
@@ -208,7 +262,7 @@ export default function AnnotatorPage() {
         <div className="side_bar">
           <h3>Sentences</h3>
           <div>
-            {questions.map((question, index) => (
+            {questions.map((_, index) => (
               <p
                 key={index}
                 onClick={() => handleQuestionClick(index)}

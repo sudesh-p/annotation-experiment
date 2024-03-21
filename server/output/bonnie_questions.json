@@ -2,19 +2,19 @@
   {
     "id": 1,
     "sentence": "yeah, I use the output of what chatgpt thinks my bio is in slide decks about trusting it.",
-    "response": "Yes",
+    "response": "No",
     "modified": true
   },
   {
     "id": 2,
     "sentence": "We all know chatgpt says only the truth.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
     "id": 3,
     "sentence": "AI taking over is a real possibility and threat. It's not an if but when and how. Those who are happily building using it should consider the worst case first. I think people are getting carried away just thinking about the upside.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
@@ -38,7 +38,7 @@
   {
     "id": 7,
     "sentence": "I am both blown away with excitement at the opportunities that chatgpt presents, and also terrified at the possibilities. the use of AI will make my research much easier, but its level of reach and ability to interpret data into a suitable summary is astounding.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
@@ -50,7 +50,7 @@
   {
     "id": 9,
     "sentence": "non techies are more involved and excited looking at how they are posting about whatever they asked chatgpt.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
@@ -74,7 +74,7 @@
   {
     "id": 13,
     "sentence": "To be honest rebaselining the results does need some explaining why? what is going on? do they need more resources? probably not the end of the world as we know it though but perhaps we should ask chatgpt if this is a worrying development?",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
@@ -86,7 +86,7 @@
   {
     "id": 15,
     "sentence": "Pricey AI bills underscore an unpleasant truth behind the recent boom in generative AI technologies: cost to develop and maintain the software can be extraordinarily high; Generative AI are booming, but at a very expensive price.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
@@ -110,7 +110,7 @@
   {
     "id": 19,
     "sentence": "Today, while everyone is celebrating what it can do, there are plenty of complications it is going to bring to our lives.  history tells us that with every new technology, our problems have compounded instead of other way round.",
-    "response": "No",
+    "response": "Yes",
     "modified": true
   },
   {
