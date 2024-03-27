@@ -1,13 +1,9 @@
-// YOUR_BASE_DIRECTORY/netlify/functions/api.ts
-
-import express, { Router } from "express";
+import express from "express";
 import serverless from "serverless-http";
+import { DataRouter } from "../../data-router";
 
 const api = express();
 
-const router = Router();
-router.get("/hello", (req, res) => res.send("Hello World!"));
-
-api.use("/api/", router);
+api.use("/api/", DataRouter);
 
 export const handler = serverless(api);

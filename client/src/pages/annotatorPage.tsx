@@ -14,11 +14,7 @@ export default function AnnotatorPage() {
   const [currentQuestion, setCurrentQuestion] = useState<string>(
     localStorage.getItem(getUserStorageKey("currentQuestion")) || "0"
   );
-  const [isFinished, setIsFinished] = useState<boolean>(
-    localStorage.getItem(getUserStorageKey("isFinished")) === "true"
-      ? true
-      : false
-  );
+  const [isFinished, setIsFinished] = useState<boolean>(false);
 
   const [questions, setQuestions] = useState<Questions>(
     JSON.parse(localStorage.getItem(getUserStorageKey("questions")) || '""') ||
@@ -51,7 +47,10 @@ export default function AnnotatorPage() {
   const fetchCompletionStatus = useCallback(async () => {
     try {
       const responseData = await fetch(
-        `http://localhost:3001/is-completed?name=${name}`
+        (import.meta.env.MODE === "development"
+          ? "http://localhost:3001/"
+          : "https://annotation-experiment.netlify.app/api/") +
+          `is-completed?name=${name}`
       );
       console.log("test", responseData);
       const data: boolean = await responseData.json();
@@ -61,27 +60,30 @@ export default function AnnotatorPage() {
     }
   }, [name]);
 
-  const submitQuiz = useCallback(() => {
-    const allQuestionsAttempted = questions.every(
-      (question) => question.response !== undefined
-    );
+  const submitQuiz = useCallback(
+    (completedQuestions: Questions) => {
+      const allQuestionsAttempted = completedQuestions.every(
+        (question) => question.response !== undefined
+      );
 
-    const allQuestionsModified = questions.every(
-      (question) => question.modified
-    );
-    if (allQuestionsAttempted && allQuestionsModified) {
-      setIsFinished(allQuestionsModified);
-      if (allQuestionsModified) {
-        sendDataToServer(name || "", questions);
-        localStorage.removeItem(getUserStorageKey("currentQuestion"));
-        localStorage.removeItem(getUserStorageKey("isFinished"));
-        localStorage.removeItem(getUserStorageKey("questions"));
-        fetchQuestions();
+      const allQuestionsModified = completedQuestions.every(
+        (question) => question.modified
+      );
+      if (allQuestionsAttempted && allQuestionsModified) {
+        setIsFinished(allQuestionsModified);
+        if (allQuestionsModified) {
+          sendDataToServer(name || "", questions);
+          localStorage.removeItem(getUserStorageKey("currentQuestion"));
+          localStorage.removeItem(getUserStorageKey("isFinished"));
+          localStorage.removeItem(getUserStorageKey("questions"));
+          fetchQuestions();
+        }
+      } else {
+        alert("Please attempt all the questions!");
       }
-    } else {
-      alert("Please attempt all the questions!");
-    }
-  }, [fetchQuestions, getUserStorageKey, name, questions]);
+    },
+    [fetchQuestions, getUserStorageKey, name, questions]
+  );
 
   const handleAnswer = useCallback(
     (answer: "Yes" | "No") => {
@@ -117,7 +119,7 @@ export default function AnnotatorPage() {
       );
     } else {
       // If it's the last question, submit the quiz
-      submitQuiz();
+      submitQuiz(updatedQuestions);
     }
   }, [currentQuestion, getUserStorageKey, questions, submitQuiz]);
 
@@ -144,40 +146,56 @@ export default function AnnotatorPage() {
   useEffect(() => {
     document.onkeydown = (event) => {
       switch (event.key) {
-        case "a":
+        case "ArrowLeft":
           handlePrevious();
           break;
-        case "w":
+        case "ArrowUp":
           handleAnswer("Yes");
           break;
-        case "s":
+        case "ArrowDown":
           handleAnswer("No");
           break;
-        case "d":
+        case "ArrowRight":
           handleNext();
           break;
       }
     };
 
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+      }
+    });
+
     return () => {
       document.onkeydown = null;
+      window.removeEventListener("keydown", (event) => {
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+        }
+      });
     };
   }, [handleAnswer, handleNext, handlePrevious]);
 
   const sendDataToServer = async (name: string, questions: Questions) => {
     try {
-      const response = await fetch("http://localhost:3001/create-file", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, questions }),
-      });
+      const response = await fetch(
+        (import.meta.env.MODE === "development"
+          ? "http://localhost:3001/"
+          : "https://annotation-experiment.netlify.app/api/") + "create-file",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, questions }),
+        }
+      );
 
       if (response.ok) {
         console.log("Annotator Data saved successfully.");
       } else {
-        throw new Error("Network response was not ok.");
+        alert("There was a problem saving the data. Please try again.");
       }
     } catch (error) {
       console.error(
@@ -200,6 +218,39 @@ export default function AnnotatorPage() {
             Welcome to the Annotation,{" "}
             {name ? name[0].toUpperCase() + name.substring(1) : ""}
           </h2>{" "}
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.2rem",
+              color: "#000",
+              margin: "10px 0",
+            }}
+          >
+            Here you will be presented with a series of sentences. Your task is
+            to determine whether each sentence implies a primal belief or not.
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.2rem",
+              color: "#000",
+              margin: "10px 0",
+            }}
+          >
+            To navigate through the sentences, you can use the arrow keys or
+            your mouse to interact with the buttons.
+          </p>
+          <p
+            style={{
+              textAlign: "center",
+              fontSize: "1.2rem",
+              color: "#000",
+              margin: "10px 0",
+            }}
+          >
+            Feel free to stop and take a break at any time! Your progress will
+            be saved automatically even if the browser is closed.
+          </p>
           <br />
           {!isFinished && questions.length > 0 ? (
             <div className="question_box">
@@ -223,7 +274,7 @@ export default function AnnotatorPage() {
                   }
                   onChange={() => handleAnswer("Yes")}
                 />
-                <label htmlFor="yes">Yes</label>
+                <label htmlFor="yes">Yes (↑)</label>
               </div>
               <div className="input_box">
                 <input
@@ -234,18 +285,18 @@ export default function AnnotatorPage() {
                   checked={questions[Number(currentQuestion)].response === "No"}
                   onChange={() => handleAnswer("No")}
                 />
-                <label htmlFor="no">No</label>
+                <label htmlFor="no">No (↓)</label>
               </div>
               <div className="btn_container">
                 <button
                   onClick={handlePrevious}
                   disabled={Number(currentQuestion) === 0}
                 >
-                  Previous
+                  Previous (←)
                 </button>
                 <button onClick={handleNext}>
                   {Number(currentQuestion) < questions.length - 1
-                    ? "Next"
+                    ? "Next (→)"
                     : "Finish"}
                 </button>
               </div>
