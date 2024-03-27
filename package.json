@@ -4,6 +4,7 @@
     "build-client": "npm run build -w client"
   },
   "workspaces": [
-    "client"
+    "client",
+    "server"
   ]
 }
