@@ -1,0 +1,10 @@
+{
+  "name": "annotation-experiment",
+  "scripts": {
+    "build-client": "npm run build -w client"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ]
+}
