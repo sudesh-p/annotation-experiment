@@ -213,6 +213,47 @@ export default function AnnotatorPage() {
   return (
     <div>
       <div className="main_container">
+        <div className="left-bar">
+          <div className="text_box">
+            <h3 style={{ textAlign: "center" }}>Good:</h3>
+            <p>
+              Safe [pleasurable, regenerative, progressing, harmless,
+              cooperative, stable, just]
+            </p>
+            <p>
+              Enticing [interesting, beautiful, abundant, worth exploring,
+              improvable, meaningful, funny]
+            </p>
+            <p> Alive [intentional, needs me, about me]</p>
+          </div>
+
+          <div className="text_box">
+            <h3 style={{ textAlign: "center" }}>Bad:</h3>
+            <p>
+              Dangerous["Miserable", "Degenerative", "Declining", "Threatening",
+              "Competitive", "Fragile", "Unjust"]
+            </p>
+            <p>
+              Dull ["Boring", "Ugly", "Barren", "Not Worth Exploring", "Too Hard
+              to Improve", "Meaningless", "Not Funny"]
+            </p>
+            <p>
+              Mechanistic["Unintentional", "Doesn't Need Me", "Indifferent"]
+            </p>
+          </div>
+
+          <div className="text_box">
+            <h3 style={{ textAlign: "center" }}>Unrelated Tertiaries:</h3>
+            <p>
+              [Acceptable, Changing, Hierarchical, Interconnected,
+              Understandable],
+            </p>
+            <p>
+              [Unacceptable, Static, Non Hierarchical, Separable, Too Hard To
+              Understand]
+            </p>
+          </div>
+        </div>
         <div className="main">
           <h2>
             Welcome to the Annotation,{" "}

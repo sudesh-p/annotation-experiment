@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -31,20 +31,20 @@ body {
   text-align: center;
   max-width: 800px;
   padding: 20px;
-  background-color: #00529B;
+  background-color: #00529b;
   /* UF Blue */
-  color: #FFC20E;
+  color: #ffc20e;
   /* UF Orange for text */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
-  color: #FFC20E;
+  color: #ffc20e;
 }
 
 .instructions {
-  background-color: #F57C00;
+  background-color: #f57c00;
   /* A darker shade of orange for contrast */
   color: #ffffff;
   padding: 20px;
@@ -56,8 +56,8 @@ select,
 button {
   padding: 10px 15px;
   margin-top: 20px;
-  border: 1px solid #FFC20E;
-  background-color: #007FFF;
+  border: 1px solid #ffc20e;
+  background-color: #007fff;
   /* A lighter shade of blue for elements */
   color: #ffffff;
   font-size: 16px;
@@ -66,21 +66,21 @@ button {
 }
 
 button {
-  background-color: #FFC20E;
+  background-color: #ffc20e;
   /* Orange button */
-  color: #00529B;
+  color: #00529b;
   /* Blue text */
   transition: background-color 0.3s, color 0.3s;
 }
 
 button:hover {
-  background-color: #F57C00;
+  background-color: #f57c00;
   /* A darker shade of orange */
   color: #ffffff;
 }
 
 a {
-  color: #00529B;
+  color: #00529b;
 }
 
 .App {
@@ -126,9 +126,9 @@ a {
 .footer {
   margin-top: auto;
   /* Pushes the footer to the bottom */
-  background-color: #00529B;
+  background-color: #00529b;
   /* UF Blue */
-  color: #FFC20E;
+  color: #ffc20e;
   /* UF Orange for text */
   text-align: center;
   padding: 20px;
@@ -150,12 +150,18 @@ a {
   /* Adjust based on your logo's size */
 }
 
-
-
-
 .main_container {
   display: flex;
   min-height: 100vh;
+}
+
+.main_container .left-bar {
+  text-align: left;
+  background-color: rgba(246, 246, 246, 0.403);
+  width: 300px;
+  max-height: 100vh;
+  overflow: scroll;
+  padding: 20px;
 }
 
 .main_container .main {
@@ -192,4 +198,11 @@ a {
 .btn_container {
   display: flex;
   justify-content: space-between;
+}
+
+.text_box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
 }
