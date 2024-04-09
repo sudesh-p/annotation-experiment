@@ -291,7 +291,7 @@ export default function AnnotatorPage() {
           </div>
 
           <div className="text_box">
-            <h3 style={{ textAlign: "center" }}>Unrelated Tertiaries:</h3>
+            <h3 style={{ textAlign: "center" }}>Tertiaries with No Secondary:</h3>
             <ul>
               <ul>
                 <li>Acceptable</li>
