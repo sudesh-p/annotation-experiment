@@ -216,42 +216,99 @@ export default function AnnotatorPage() {
         <div className="left-bar">
           <div className="text_box">
             <h3 style={{ textAlign: "center" }}>Good:</h3>
-            <p>
-              Safe [pleasurable, regenerative, progressing, harmless,
-              cooperative, stable, just]
-            </p>
-            <p>
-              Enticing [interesting, beautiful, abundant, worth exploring,
-              improvable, meaningful, funny]
-            </p>
-            <p> Alive [intentional, needs me, about me]</p>
+            <ul>
+              <li>
+                Safe
+                <ul>
+                  <li>Pleasurable</li>
+                  <li>Regenerative</li>
+                  <li>Progressing</li>
+                  <li>Harmless</li>
+                  <li>Cooperative</li>
+                  <li>Stable</li>
+                  <li>Just</li>
+                </ul>
+              </li>
+              <li>
+                Enticing
+                <ul>
+                  <li>Interesting</li>
+                  <li>Beautiful</li>
+                  <li>Abundant</li>
+                  <li>Worth exploring</li>
+                  <li>Improvable</li>
+                  <li>Meaningful</li>
+                  <li>Funny</li>
+                </ul>
+              </li>
+              <li>
+                Alive
+                <ul>
+                  <li>Intentional</li>
+                  <li>Needs me</li>
+                  <li>About me</li>
+                </ul>
+              </li>
+            </ul>
           </div>
 
           <div className="text_box">
             <h3 style={{ textAlign: "center" }}>Bad:</h3>
-            <p>
-              Dangerous["Miserable", "Degenerative", "Declining", "Threatening",
-              "Competitive", "Fragile", "Unjust"]
-            </p>
-            <p>
-              Dull ["Boring", "Ugly", "Barren", "Not Worth Exploring", "Too Hard
-              to Improve", "Meaningless", "Not Funny"]
-            </p>
-            <p>
-              Mechanistic["Unintentional", "Doesn't Need Me", "Indifferent"]
-            </p>
+            <ul>
+              <li>
+                Dangerous
+                <ul>
+                  <li>Miserable</li>
+                  <li>Degenerative</li>
+                  <li>Declining</li>
+                  <li>Threatening</li>
+                  <li>Competitive</li>
+                  <li>Fragile</li>
+                  <li>Unjust</li>
+                </ul>
+              </li>
+              <li>
+                Dull
+                <ul>
+                  <li>Boring</li>
+                  <li>Ugly</li>
+                  <li>Barren</li>
+                  <li>Not Worth Exploring</li>
+                  <li>Too Hard to Improve</li>
+                  <li>Meaningless</li>
+                  <li>Not Funny</li>
+                </ul>
+              </li>
+              <li>
+                Mechanistic
+                <ul>
+                  <li>Unintentional</li>
+                  <li>Doesn't Need Me</li>
+                  <li>Indifferent</li>
+                </ul>
+              </li>
+            </ul>
           </div>
 
           <div className="text_box">
-            <h3 style={{ textAlign: "center" }}>Unrelated Tertiaries:</h3>
-            <p>
-              [Acceptable, Changing, Hierarchical, Interconnected,
-              Understandable],
-            </p>
-            <p>
-              [Unacceptable, Static, Non Hierarchical, Separable, Too Hard To
-              Understand]
-            </p>
+            <h3 style={{ textAlign: "center" }}>Tertiaries with No Secondary:</h3>
+            <ul>
+              <ul>
+                <li>Acceptable</li>
+                <li>Changing</li>
+                <li>Hierarchical</li>
+                <li>Interconnected</li>
+                <li>Understandable</li>
+              </ul>
+
+              <ul>
+                <li>Unacceptable</li>
+                <li>Static</li>
+                <li>Non Hierarchical</li>
+                <li>Separable</li>
+                <li>Too Hard To Understand</li>
+              </ul>
+            </ul>
           </div>
         </div>
         <div className="main">
