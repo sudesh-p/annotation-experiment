@@ -43,6 +43,9 @@ export default function LandingPage() {
             <option value="bonnie">Bonnie</option>
             <option value="brodie">Brodie</option>
             <option value="justin">Justin</option>
+            <option value="divyansh">Divyansh</option>
+            <option value="venkat">Venkat</option>
+            <option value="sudesh">Sudesh</option>
           </select>
           <br />
           <button onClick={handleAnnotator}>Start</button>
